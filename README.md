@@ -16,7 +16,7 @@ The pipeline of FaceGCN for blind face restoration. The corrupted face (Input) i
 + numpy
 
 
-## Datasets are provided in [here](https://github.com/wzhouxiff/RestoreFormer?tab=readme-ov-file#preparations-of-dataset-and-models)
+## Datasets are provided [here](https://github.com/wzhouxiff/RestoreFormer?tab=readme-ov-file#preparations-of-dataset-and-models)
 
 
 ## Train and Test (based on [Basicsr](https://github.com/XPixelGroup/BasicSR))
