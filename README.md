@@ -22,7 +22,7 @@ The pipeline of FaceGCN for blind face restoration. The corrupted face (Input) i
 ## Train and Test (based on [Basicsr](https://github.com/XPixelGroup/BasicSR))
 
     python facegcn/train.py -opt options/train/train_stage_1.yml --auto_resume
-    python facegcn/train.py -opt options/train/train_stage_2.yml --auto_resum
+    python facegcn/train.py -opt options/train/train_stage_2.yml --auto_resume
     python facegcn/test.py -opt options/test/test_xxx.yml
 
 **ps: the path configs should be changed to your own path**
