@@ -1,0 +1,141 @@
+# general settings
+name: train_facegcn_base_stage_1
+model_type: FaceGCNModel
+num_gpu: auto
+manual_seed: 0
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: FFHQ
+    type: FFHQDegradationDataset
+    dataroot_gt: /root/yanwd_data/dataset/FFHQ/FFHQ_512/
+    io_backend:
+      type: disk
+
+    use_hflip: true
+    mean: [0.5, 0.5, 0.5]
+    std: [0.5, 0.5, 0.5]
+    out_size: 512
+
+    blur_kernel_size: 41
+    kernel_list: ['iso', 'aniso']
+    kernel_prob: [0.5, 0.5]
+    blur_sigma: [0.1, 10]
+    downsample_range: [0.8, 8]
+    noise_range: [0, 20]
+    jpeg_range: [60, 100]
+
+    # color jitter and gray
+    color_jitter_prob: 0.3
+    color_jitter_shift: 20
+    color_jitter_pt_prob: 0.3
+    gray_prob: 0.01
+
+    # If you do not want colorization, please set
+    # color_jitter_prob: ~
+    # color_jitter_pt_prob: ~
+    # gray_prob: 0.01
+    # gt_gray: True
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 6
+    batch_size_per_gpu: 2
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  val:
+    # Please modify accordingly to use your own validation
+    # Or comment the val block if do not need validation during training
+    name: validation
+    type: PairedImageDataset
+    dataroot_lq: /root/yanwd_data/dataset/CelebA_test/degraded
+    dataroot_gt: /root/yanwd_data/dataset/CelebA_test/CelebA_HQ/validation_image
+    io_backend:
+      type: disk
+    mean: [0.5, 0.5, 0.5]
+    std: [0.5, 0.5, 0.5]
+    scale: 1
+
+# network structures
+network_g:
+  type: FaceGCN
+  in_feature: 3
+  out_feature: 3
+  ipt_h: 512
+  ipt_w: 512
+  n_resblocks: 8
+  n_filters: 64
+  n_stripgcm: 6
+  scale_feat_graph: 8
+  n_graph_features: 32
+  n_ResGCN: 2
+  n_latent_resblocks: 2
+
+
+# path
+path:
+  pretrain_network_g: ~
+  param_key_g: params
+  strict_load_g: ~
+  pretrain_network_d: ~
+  resume_state: ~
+
+# training settings
+train:
+  optim_g:
+    type: Adam
+    lr: !!float 2e-4
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [150000, 200000]
+    gamma: 0.5
+
+  total_iter: 250000
+  warmup_iter: -1  # no warm up
+
+  # losses
+  # pixel loss
+  pixel_opt:
+    type: L1Loss
+    loss_weight: !!float 1
+    reduction: mean
+
+  adj_opt:
+    type: SWAdjLoss
+    loss_weight: !!float 1e-2
+
+  adj_struct_opt:
+    type: FaceStructureLoss
+    loss_weight: !!float 1e-2
+    win_size: 3
+
+# validation settings
+val:
+  val_freq: !!float 5e3
+  save_img: true
+
+  metrics:
+    psnr: # metric name
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+
+# logging settings
+logger:
+#  print_freq: 200
+  print_freq: 200
+  save_checkpoint_freq: !!float 5e3
+  use_tb_logger: false
+  wandb:
+    project: ~
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29500
+
+find_unused_parameters: true

@@ -1,0 +1,46 @@
+# general settings
+name: test_facegcn
+model_type: FaceGCNModel
+num_gpu: auto
+manual_seed: 0
+
+datasets:
+  val:
+    name: CelebA
+    type: PairedImageDataset
+    dataroot_lq: /root/yanwd_data/dataset/CelebA_test/degraded
+    dataroot_gt: /root/yanwd_data/dataset/CelebA_test/CelebA_HQ/validation_image
+    io_backend:
+      type: disk
+    mean: [0.5, 0.5, 0.5]
+    std: [0.5, 0.5, 0.5]
+    scale: 1
+
+
+# network structures
+network_g:
+  type: FaceGCN
+  in_feature: 3
+  out_feature: 3
+  ipt_h: 512
+  ipt_w: 512
+  n_resblocks: 8
+  n_filters: 64
+  n_stripgcm: 6
+  scale_feat_graph: 8
+  n_graph_features: 32
+  n_ResGCN: 2
+  n_latent_resblocks: 2
+
+# path
+path:
+  pretrain_network_g: /root/yanwd_data/projects/FaceGCN/experiments/ # Path to your model
+  param_key_g: params
+  strict_load_g: ~
+  pretrain_network_d: ~
+  resume_state: ~
+
+# validation settings
+val:
+  save_img: true
+  suffix: ~
