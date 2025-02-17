@@ -5,7 +5,7 @@ Convolutional Networks for Blind Face Restoration
 
 [paper](https://ieeexplore.ieee.org/document/10830527/) | [project](https://github.com/yanwd628/FaceGCN)
 
-![](./imgs/overview.png)
+![](./imgs/overview_new.png)
 
 The pipeline of FaceGCN for blind face restoration. The corrupted face (Input) in the feature domain is firstly constructed into a face graph with case-specific guidance from the Dynamic Adjacency Matrix Generator. Then, some Strip-Attention GCN Modules are stacked to finally produce the restored face (Output) benefiting from the captured joint local-nonlocal correlations among various facial feature components.
 
